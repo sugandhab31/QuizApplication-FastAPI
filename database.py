@@ -9,9 +9,11 @@ password="postgres",
 host="127.0.0.1",
 port=5432,
 
-URL_DATABASE = 'postgresql://{0}:{1}@{2}:5432/{3}'.format(
-    user,password,host,database
+URL_DATABASE = "postgresql://{0}:{1}@{2}:5432/{3}".format(
+    user[0],password[0],host[0],database[0]
 )
+
+print("***",URL_DATABASE,"***")
 
 engine = create_engine(URL_DATABASE)
 

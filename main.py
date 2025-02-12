@@ -8,6 +8,8 @@ from sqlalchemy.orm import Session
 app = FastAPI()
 models.Base.metadata.create_all(bind = engine)
 
+# app.include_router(create_questions)
+
 class ChoiceBase(BaseModel):        #pydantic model
     choice_text: str
     is_correct: bool
@@ -32,8 +34,17 @@ async def create_questions(question: QuestionBase, db: db_dependency):
     db.commit()
     db.refresh(db_question)
     for choice in question.choices:
-        db_choice = models.Choices(choice_text = choice.choice_text, is_correct = choice.is_correct)
+        db_choice = models.Choices(choice_text = choice.choice_text, is_correct = choice.is_correct, question_id = db_question.id)
         db.add(db_choice)
     db.commit()
-    
+
+@app.get("/questions/{question_id}")
+async def read_questions(question_id: int, db: db_dependency):
+    try:
+        result = db.query(models.Questions).filter(models.Questions.id == question_id).first()
+        if not result:
+            raise HTTPException(status_code=404, detail="Question not found")
+        return result
+    except Exception:
+        print(Exception)
     
