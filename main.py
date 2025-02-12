@@ -8,7 +8,7 @@ from sqlalchemy.orm import Session
 app = FastAPI()
 models.Base.metadata.create_all(bind = engine)
 
-class ChoiceBase(BaseModel):
+class ChoiceBase(BaseModel):        #pydantic model
     choice_text: str
     is_correct: bool
 
@@ -23,4 +23,17 @@ def get_db():
     finally:
         db.close()
 
+db_dependency = Annotated[Session, Depends(get_db)]     #Now, in our routes, we can reuse db_dependency instead of writing Session = Depends(get_db) every time.
 
+@app.post("/questions/")
+async def create_questions(question: QuestionBase, db: db_dependency):
+    db_question = models.Questions(question_text = question.question_text)
+    db.add(db_question)
+    db.commit()
+    db.refresh(db_question)
+    for choice in question.choices:
+        db_choice = models.Choices(choice_text = choice.choice_text, is_correct = choice.is_correct)
+        db.add(db_choice)
+    db.commit()
+    
+    

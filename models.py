@@ -1,4 +1,4 @@
-from sqlalchemy import Boolean, Integer, Column, ForeignKey, String, Index
+from sqlalchemy import Boolean, Integer, Column, ForeignKey, String
 from database import Base
 
 class Questions(Base):

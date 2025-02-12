@@ -2,14 +2,15 @@ from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy.ext.declarative import declarative_base
 
+
 database="spendsense",
 user="flask-user",
 password="postgres",
 host="127.0.0.1",
 port=5432,
 
-URL_DATABASE = 'postgres://{0}:{1}@{2}:{3}/{4}'.format(
-    user,password,host,port,database
+URL_DATABASE = 'postgresql://{0}:{1}@{2}:5432/{3}'.format(
+    user,password,host,database
 )
 
 engine = create_engine(URL_DATABASE)
